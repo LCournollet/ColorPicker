@@ -1,65 +1,80 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ColorPickerApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+class ColorPickerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Color Picker',
+      title: 'ColorPicker',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Color Picker'),
+      home: HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('ColorPicker'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
+        child: Text(
+          'Welcome to ColorPicker App!',
+          style: TextStyle(fontSize: 24.0),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            BottomNavItem(
+              title: 'mycolors',
               onPressed: () {
-                // Handle button 1 press
+                // Add functionality for mycolors button
               },
-              child: Text('Button 1'),
             ),
-            ElevatedButton(
+            BottomNavItem(
+              title: 'Choose colors',
               onPressed: () {
-                // Handle button 2 press
+                // Add functionality for Choose colors button
               },
-              child: Text('Button 2'),
             ),
-            ElevatedButton(
+            BottomNavItem(
+              title: 'Image',
               onPressed: () {
-                // Handle button 3 press
+                // Add functionality for circle palette button
               },
-              child: Text('Button 3'),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class BottomNavItem extends StatelessWidget {
+  final String title;
+  final Function onPressed;
+
+  const BottomNavItem({
+    required this.title,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () => onPressed(),
+      child: Text(
+        title,
+        style: TextStyle(fontSize: 16.0, color: Colors.blue),
       ),
     );
   }
