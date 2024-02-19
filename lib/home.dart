@@ -1,3 +1,4 @@
+import 'package:color_picker/images.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -32,9 +33,12 @@ class HomePage extends StatelessWidget {
               },
             ),
             BottomNavItem(
-              title: 'IMAGE',
+              title: 'Images',
               onPressed: () {
-                print('Image button pressed');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ImagePage()),
+                );
               },
             ),
           ],
