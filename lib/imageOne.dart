@@ -13,6 +13,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   late Future<Photo> _photoFuture;
   Color? color;
   PickerResponse? userResponse;
+  bool _showRectangle = false;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
       _photoFuture = _fetchSinglePhoto();
       // Reset userResponse to null when generating a new image
       userResponse = null;
+      _showRectangle = false; // Hide the rectangle when generating a new image
     });
   }
 
@@ -52,7 +54,6 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Image Picker'),
-          backgroundColor: userResponse?.selectionColor ?? Colors.blue, // Change the app bar color based on selected color
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -92,15 +93,71 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                             setState(() {
                               userResponse = response;
                               this.color = response.selectionColor;
+                              _showRectangle = true; // Show the rectangle when a color is selected
                             });
                           },
                         );
                       }
                     },
                   ),
-                  if (userResponse == null)
-                    CircularProgressIndicator(
-                      color: Colors.black,
+                  if (_showRectangle) // Display the rectangle only when a color is selected
+                    Positioned(
+                      bottom: 20,
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 1),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            if (userResponse != null) {
+                              _copyToClipboard(userResponse!.hexCode);
+                            }
+                          },
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Selected Color:",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Container(
+                                    width: 30,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      color: userResponse != null ? userResponse!.selectionColor : Colors.transparent,
+                                      border: Border.all(color: Colors.black, width: 1),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Hex Code: ${userResponse?.hexCode ?? "-"}",
+                                    style: TextStyle(
+                                      color: userResponse != null ? Colors.black : Colors.grey,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                 ],
               ),
@@ -114,71 +171,6 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                     onPressed: _generateNewImage,
                     tooltip: 'Generate New Image',
                     child: Icon(Icons.refresh),
-                  ),
-                  SizedBox(width: 20),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Selected Color:",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: userResponse != null ? userResponse!.selectionColor : Colors.transparent,
-                                border: Border.all(color: Colors.black, width: 1),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        TextButton(
-                          onPressed: () {
-                            if (userResponse != null) {
-                              _copyToClipboard(userResponse!.hexCode);
-                            }
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Hex Code: ",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                userResponse?.hexCode ?? "-",
-                                style: TextStyle(
-                                  color: userResponse != null ? userResponse!.selectionColor : Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                 ],
               ),
