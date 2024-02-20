@@ -25,7 +25,7 @@ class ImagePage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => ImagePickerScreen()),
                 );
               },
-              child: Text('Open Image 1'),
+              child: Text('Generate an image'),
             ),
           ],
         ),
