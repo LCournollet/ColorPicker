@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pick_color/pick_color.dart';
-import 'package:color_picker/api.dart';
+import 'package:color_picker/api/api.dart';
 import 'package:flutter/services.dart'; // Import the flutter/services.dart package for accessing clipboard functionality
 import 'package:unsplash_client/unsplash_client.dart'; // Import the unsplash_client package
 
@@ -53,13 +53,14 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Image Picker'),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+          title: Text(
+            'Pick a color on the picture',
+            style: TextStyle(
+              fontSize: 20.0,
+              fontFamily: "SpaceGroteskBold",
+            ),
           ),
+          centerTitle: true,
         ),
         body: Column(
           children: [
@@ -85,7 +86,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                         );
                       } else {
                         final photo = snapshot.data!;
-                        final resizedUrl = "${photo.urls.raw}&w=800&h=800";
+                        final resizedUrl = "${photo.urls.raw}&w=400&h=400";
                         return ColorPicker(
                           child: Image.network(resizedUrl),
                           showMarker: true,

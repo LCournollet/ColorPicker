@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:color_picker/imageOne.dart'; // Import the ImageOne file
+import 'package:color_picker/images/image_one.dart'; // Import the ImageOne file
 
 void main() {
   runApp(MaterialApp(

@@ -1,4 +1,4 @@
-import 'package:color_picker/images.dart';
+import 'package:color_picker/images/images.dart';
 import 'package:flutter/material.dart';
 import 'choose_colors.dart';
 
