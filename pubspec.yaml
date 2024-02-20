@@ -10,8 +10,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   flutter_material_color_picker: ^1.2.0
   shared_preferences: ^2.2.2
+  palette_generator: ^0.3.3+3
+  pick_color: ^0.0.4
+  unsplash_client: ^2.2.0
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
