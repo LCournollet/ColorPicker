@@ -1,34 +1,46 @@
 import 'package:flutter/material.dart';
+import 'choose_colors.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Color Picker'),
-      ),
-      body: Center(
-        child: Text(
-          'Welcome to ColorPicker App!',
-          style: TextStyle(fontSize: 24.0),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/background.jpg'),
+            fit: BoxFit.cover, // Ajuste l'image pour couvrir tout le conteneur
+          ),
+        ),
+        child: Center(
+          child: Text(
+            'Welcome to ColorPicker App!',
+            style: TextStyle(
+              fontSize: 24.0,
+              fontFamily: "SpaceGroteskBold",
+              decoration: TextDecoration.underline, // Ajout du soulignement
+            ),
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             BottomNavItem(
-              title: 'mycolors',
+              title: 'My Colors',
               onPressed: () {
                 print('mycolors button pressed');
               },
             ),
             BottomNavItem(
-              title: 'Choose colors',
+              title: 'Choose a color',
               onPressed: () {
-                print('Choose colors button pressed');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChooseColorsPage()),
+                );
               },
             ),
             BottomNavItem(
