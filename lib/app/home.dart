@@ -1,7 +1,7 @@
 import 'package:color_picker/images/images.dart';
-import 'package:color_picker/my_colors.dart';
+import 'package:color_picker/colors/my_colors.dart';
 import 'package:flutter/material.dart';
-import 'choose_colors.dart';
+import '../colors/choose_colors.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);

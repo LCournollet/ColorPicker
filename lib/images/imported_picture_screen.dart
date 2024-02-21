@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:pick_color/pick_color.dart';
-import 'package:flutter/services.dart'; // Import the flutter/services.dart package for accessing clipboard functionality
-import 'package:image_picker/image_picker.dart'; // Import the image_picker package for picking images from the device
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ImportedPictureScreen extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class _ImportedPictureScreenState extends State<ImportedPictureScreen> {
   File? _selectedImage;
 
   void _copyToClipboard(String text) {
-    Clipboard.setData(ClipboardData(text: text)); // Copy text to clipboard
+    Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Hex code copied to clipboard'),
@@ -30,9 +30,8 @@ class _ImportedPictureScreenState extends State<ImportedPictureScreen> {
     final pickedImage = await _imagePicker.pickImage(source: source);
     if (pickedImage != null) {
       setState(() {
-        // Set the selected image file
         _selectedImage = File(pickedImage.path);
-        _showRectangle = false; // Reset the rectangle display when a new image is picked
+        _showRectangle = false;
       });
     }
   }
@@ -42,46 +41,70 @@ class _ImportedPictureScreenState extends State<ImportedPictureScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Imported Picture'),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+          title: Text('Import or take a picture'),
+          centerTitle: true,
+          backgroundColor: Colors.blue,
         ),
+        backgroundColor: Color(0xFFCFF0FF),
         body: Column(
           children: [
             Expanded(
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  if (_selectedImage != null) // Display selected image if available
-                    Image.file(
-                      _selectedImage!,
-                      width: 800,
-                      height: 800,
-                      fit: BoxFit.cover,
+                  if (_selectedImage != null)
+                    Positioned(
+                      top: MediaQuery.of(context).size.height * 0.1,
+                      child: Image.file(
+                        _selectedImage!,
+                        width: 800,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ColorPicker(
-                    child: _selectedImage != null
-                        ? Image.file(
-                      _selectedImage!,
-                      width: 800,
-                      height: 800,
-                      fit: BoxFit.cover,
-                    )
-                        : Image.network('https://via.placeholder.com/800x800'), // Placeholder image
-                    showMarker: true,
-                    onChanged: (response) {
+                  GestureDetector(
+                    onTap: () {
                       setState(() {
-                        userResponse = response;
-                        this.color = response.selectionColor;
-                        _showRectangle = true; // Show the rectangle when a color is selected
+                        _showRectangle = true;
                       });
                     },
+                    child: ColorPicker(
+                      child: Container(
+                        width: 800,
+                        height: 800,
+                        decoration: BoxDecoration(
+                          image: _selectedImage != null
+                              ? DecorationImage(
+                            image: FileImage(_selectedImage!),
+                            fit: BoxFit.cover,
+                          )
+                              : null,
+                        ),
+                      ),
+                      showMarker: false,
+                      onChanged: (response) {
+                        setState(() {
+                          userResponse = response;
+                          this.color = response.selectionColor;
+                          _showRectangle = true;
+                        });
+                      },
+                    ),
                   ),
-                  if (_showRectangle) // Display the rectangle only when a color is selected
+                  if (_showRectangle && userResponse != null)
+                    Positioned(
+                      left: userResponse!.xpostion+5,
+                      top: userResponse!.ypostion-25,
+                      child: Container(
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: userResponse!.selectionColor,
+                        ),
+                      ),
+                    ),
+                  if (_showRectangle)
                     Positioned(
                       bottom: 20,
                       child: Container(
@@ -89,6 +112,7 @@ class _ImportedPictureScreenState extends State<ImportedPictureScreen> {
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black, width: 1),
                           borderRadius: BorderRadius.circular(5),
+                          color: Colors.grey[200],
                         ),
                         child: InkWell(
                           onTap: () {
@@ -104,7 +128,7 @@ class _ImportedPictureScreenState extends State<ImportedPictureScreen> {
                                   Text(
                                     "Selected Color:",
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.blue, // Change la couleur du texte en bleu
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
                                     ),
@@ -128,7 +152,7 @@ class _ImportedPictureScreenState extends State<ImportedPictureScreen> {
                                   Text(
                                     "Hex Code: ${userResponse?.hexCode ?? "-"}",
                                     style: TextStyle(
-                                      color: userResponse != null ? Colors.black : Colors.grey,
+                                      color: userResponse != null ? Colors.blue : Colors.grey,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
                                     ),
@@ -150,14 +174,22 @@ class _ImportedPictureScreenState extends State<ImportedPictureScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(
+                      ElevatedButton.icon(
                         onPressed: () => _pickImage(ImageSource.gallery),
-                        child: Text('Import Picture'),
+                        icon: Icon(Icons.image, color: Colors.blue), // Change la couleur de l'icône en bleu
+                        label: Text(
+                          'Import Picture',
+                          style: TextStyle(color: Colors.blue), // Change la couleur du texte en bleu
+                        ),
                       ),
                       SizedBox(width: 16),
-                      ElevatedButton(
+                      ElevatedButton.icon(
                         onPressed: () => _pickImage(ImageSource.camera),
-                        child: Text('Take Picture'),
+                        icon: Icon(Icons.camera_alt, color: Colors.blue), // Change la couleur de l'icône en bleu
+                        label: Text(
+                          'Take Picture',
+                          style: TextStyle(color: Colors.blue), // Change la couleur du texte en bleu
+                        ),
                       ),
                     ],
                   ),

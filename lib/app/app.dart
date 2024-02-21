@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:color_picker/home.dart';
+import 'package:color_picker/app/home.dart';
 
 class App extends StatelessWidget {
   const App({Key? key});

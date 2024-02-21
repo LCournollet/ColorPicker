@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pick_color/pick_color.dart';
-import 'package:color_picker/api/api.dart';
+import 'package:color_picker/app/api/api.dart';
 import 'package:flutter/services.dart'; // Import the flutter/services.dart package for accessing clipboard functionality
 import 'package:unsplash_client/unsplash_client.dart'; // Import the unsplash_client package
 
-class ImagePickerScreen extends StatefulWidget {
+class GenerateImageScreen extends StatefulWidget {
   @override
-  _ImagePickerScreenState createState() => _ImagePickerScreenState();
+  _GenerateImageScreenState createState() => _GenerateImageScreenState();
 }
 
-class _ImagePickerScreenState extends State<ImagePickerScreen> {
+class _GenerateImageScreenState extends State<GenerateImageScreen> {
   late Future<Photo> _photoFuture;
   Color? color;
   PickerResponse? userResponse;
@@ -53,14 +53,11 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Image Picker'),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+          title: Text('Generate an image'),
+          centerTitle: true,
+          backgroundColor: Colors.blue,
         ),
+        backgroundColor: Color(0xFFCFF0FF),
         body: Column(
           children: [
             Expanded(
@@ -88,11 +85,11 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                         final resizedUrl = "${photo.urls.raw}&w=800&h=800";
                         return ColorPicker(
                           child: Image.network(resizedUrl),
-                          showMarker: true,
+                          showMarker: false,
                           onChanged: (response) {
                             setState(() {
                               userResponse = response;
-                              this.color = response.selectionColor;
+                              color = response.selectionColor;
                               _showRectangle = true; // Show the rectangle when a color is selected
                             });
                           },
@@ -108,6 +105,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black, width: 1),
                           borderRadius: BorderRadius.circular(5),
+                          color: Colors.grey[200],
                         ),
                         child: InkWell(
                           onTap: () {
