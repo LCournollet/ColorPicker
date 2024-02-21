@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:color_picker/imageOne.dart'; // Import the ImageOne file
+import 'package:color_picker/imageOne.dart';
+import 'package:color_picker/imported_picture.dart';// Import the ImageOne file
 
 void main() {
   runApp(MaterialApp(
@@ -26,6 +27,16 @@ class ImagePage extends StatelessWidget {
                 );
               },
               child: Text('Generate an image'),
+            ),
+            SizedBox(height: 20), // Add some space between buttons
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ImportedPictureScreen()),
+                );
+              },
+              child: Text('Use my images'),
             ),
           ],
         ),
