@@ -13,6 +13,7 @@ class ChooseColorsPage extends StatefulWidget {
 class _ChooseColorsPageState extends State<ChooseColorsPage> {
   late Color _selectedColor;
   late String _hexString;
+  bool _showColorPicker = false;
 
   @override
   void initState() {
@@ -67,39 +68,33 @@ class _ChooseColorsPageState extends State<ChooseColorsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            MaterialColorPicker(
-              selectedColor: _selectedColor,
-              onColorChange: (color) {
+            GestureDetector(
+              onTap: () {
                 setState(() {
-                  _selectedColor = color;
-                  _updateHexString();
-                  _saveSelectedColor(color);
+                  _showColorPicker = !_showColorPicker;
                 });
               },
-              circleSize: 65.0,
-              spacing: 25,
+              child: Container(
+                width: 100,
+                height: 100,
+                color: _selectedColor,
+              ),
             ),
             SizedBox(height: 30),
-            Text(
-              'Selected Color:',
-              style: TextStyle(
-                fontSize: 25,
-                fontFamily: 'SpaceGroteskBold',
+            if (_showColorPicker)
+              MaterialColorPicker(
+                selectedColor: _selectedColor,
+                onColorChange: (color) {
+                  setState(() {
+                    _selectedColor = color;
+                    _updateHexString();
+                    _saveSelectedColor(color);
+                  });
+                },
+                circleSize: 65.0,
+                spacing: 25,
               ),
-            ),
-            SizedBox(height: 10),
-            Container(
-              width: 60,
-              height: 70,
-              decoration: BoxDecoration(
-                color: _selectedColor,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2,
-                ),
-              ),
-            ),
+            SizedBox(height: 30),
             RichText(
               text: TextSpan(
                 style: TextStyle(

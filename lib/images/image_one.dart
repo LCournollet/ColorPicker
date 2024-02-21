@@ -62,121 +62,97 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
           ),
           centerTitle: true,
         ),
-        body: Column(
+        body: Stack(
           children: [
-            Expanded(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  FutureBuilder<Photo>(
-                    future: _photoFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        // Display a loading indicator while fetching the image
-                        return CircularProgressIndicator(
-                          color: Colors.black,
-                        );
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child: Text('Error: ${snapshot.error}'),
-                        );
-                      } else if (!snapshot.hasData) {
-                        return Center(
-                          child: Text('No photo data available'),
-                        );
-                      } else {
-                        final photo = snapshot.data!;
-                        final resizedUrl = "${photo.urls.raw}&w=400&h=400";
-                        return ColorPicker(
-                          child: Image.network(resizedUrl),
-                          showMarker: true,
-                          onChanged: (response) {
-                            setState(() {
-                              userResponse = response;
-                              this.color = response.selectionColor;
-                              _showRectangle = true; // Show the rectangle when a color is selected
-                            });
-                          },
-                        );
-                      }
+            FutureBuilder<Photo>(
+              future: _photoFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Display a loading indicator while fetching the image
+                  return CircularProgressIndicator(
+                    color: Colors.black,
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                } else if (!snapshot.hasData) {
+                  return Center(
+                    child: Text('No photo data available'),
+                  );
+                } else {
+                  final photo = snapshot.data!;
+                  final resizedUrl = "${photo.urls.raw}&w=400&h=400";
+                  return ColorPicker(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 20.0), // Ajustez la valeur selon vos besoins
+                      child: Image.network(resizedUrl),
+                    ),
+                    showMarker: true,
+                    onChanged: (response) {
+                      setState(() {
+                        userResponse = response;
+                        this.color = response.selectionColor;
+                        _showRectangle = true; // Afficher le rectangle lorsque une couleur est sélectionnée
+                      });
                     },
-                  ),
-                  if (_showRectangle) // Display the rectangle only when a color is selected
-                    Positioned(
-                      bottom: 20,
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width: 1),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            if (userResponse != null) {
-                              _copyToClipboard(userResponse!.hexCode);
-                            }
-                          },
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Selected Color:",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: userResponse != null ? userResponse!.selectionColor : Colors.transparent,
-                                      border: Border.all(color: Colors.black, width: 1),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Hex Code: ${userResponse?.hexCode ?? "-"}",
-                                    style: TextStyle(
-                                      color: userResponse != null ? Colors.black : Colors.grey,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                  );
+                }
+              },
+            ),
+            if (_showRectangle) // Display the rectangle only when a color is selected
+              Positioned(
+                bottom: 20,
+                child: Container(
+                  color: Colors.grey[200],
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Selected Color:",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
+                          SizedBox(width: 10),
+                          Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: userResponse != null ? userResponse!
+                                  .selectionColor : Colors.transparent,
+                              border: Border.all(color: Colors.black, width: 1),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Hex Code: ${userResponse?.hexCode ?? "-"}",
+                        style: TextStyle(
+                          color: userResponse != null ? Colors.black : Colors
+                              .grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
                       ),
-                    ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FloatingActionButton(
-                    onPressed: _generateNewImage,
-                    tooltip: 'Generate New Image',
-                    child: Icon(Icons.refresh),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _generateNewImage,
+          tooltip: 'Generate New Image',
+          child: Icon(Icons.refresh),
         ),
       ),
     );
