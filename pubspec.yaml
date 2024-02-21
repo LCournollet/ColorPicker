@@ -17,6 +17,7 @@ dependencies:
   pick_color: ^0.0.4
   unsplash_client: ^2.2.0
   cupertino_icons: ^1.0.2
+  image_picker: ^0.8.4+2
 
 dev_dependencies:
   flutter_test:
