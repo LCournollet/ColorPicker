@@ -1,42 +1,59 @@
 import 'package:color_picker/images/images.dart';
+import 'package:color_picker/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'choose_colors.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/background.jpg'),
-            fit: BoxFit.cover, // Ajuste l'image pour couvrir tout le conteneur
-          ),
-        ),
+        color: Color(0xFFCFF0FF),
         child: Center(
-          child: Text(
-            'Welcome to ColorPicker App!',
-            style: TextStyle(
-              fontSize: 24.0,
-              fontFamily: "SpaceGroteskBold",
-              decoration: TextDecoration.underline, // Ajout du soulignement
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Image.asset(
+                  'assets/logo.png',
+                  width: 200,
+                ),
+              ),
+              SizedBox(height: 20), // Espacement entre le logo et le texte
+              Text(
+                'ColorPicker App!',
+                style: TextStyle(
+                  fontSize: 36.0,
+                  fontFamily: "SpaceGroteskBold",
+                ),
+              ),
+            ],
           ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
+        height: 100,
+        color: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             BottomNavItem(
               title: 'My Colors',
+              icon: Icons.account_box,
               onPressed: () {
-                print('mycolors button pressed');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyColorsPage()),
+                );
               },
             ),
             BottomNavItem(
               title: 'Choose a color',
+              icon: Icons.palette,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -46,6 +63,7 @@ class HomePage extends StatelessWidget {
             ),
             BottomNavItem(
               title: 'Images',
+              icon: Icons.image,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -62,10 +80,12 @@ class HomePage extends StatelessWidget {
 
 class BottomNavItem extends StatelessWidget {
   final String title;
+  final IconData icon;
   final Function onPressed;
 
   const BottomNavItem({
     required this.title,
+    required this.icon,
     required this.onPressed,
   });
 
@@ -73,9 +93,21 @@ class BottomNavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () => onPressed(),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 16.0, color: Colors.blue),
+      child: Column(
+        children: [
+          Flexible(
+            child: Icon(
+              icon,
+              color: Colors.blueAccent,
+              size: 30,
+            ),
+          ),
+          SizedBox(height: 18),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 16.0, color: Colors.blue),
+          ),
+        ],
       ),
     );
   }

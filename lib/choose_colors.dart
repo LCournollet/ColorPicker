@@ -13,7 +13,7 @@ class ChooseColorsPage extends StatefulWidget {
 class _ChooseColorsPageState extends State<ChooseColorsPage> {
   late Color _selectedColor;
   late String _hexString;
-  bool _showColorPicker = false;
+  bool _showColorPicker = true; // Afficher la palette de couleurs par défaut
 
   @override
   void initState() {
@@ -48,6 +48,18 @@ class _ChooseColorsPageState extends State<ChooseColorsPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Hexadecimal code copied : $_hexString')),
     );
+    _saveCopiedColor(_selectedColor); // Sauvegarde de la couleur copiée
+  }
+
+// Fonction pour sauvegarder la couleur copiée dans SharedPreferences
+  void _saveCopiedColor(Color color) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? copiedColors = prefs.getStringList('copied_colors');
+    if (copiedColors == null) {
+      copiedColors = [];
+    }
+    copiedColors.add(color.value.toString());
+    await prefs.setStringList('copied_colors', copiedColors);
   }
 
   @override
@@ -68,12 +80,8 @@ class _ChooseColorsPageState extends State<ChooseColorsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _showColorPicker = !_showColorPicker;
-                });
-              },
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16),
               child: Container(
                 width: 100,
                 height: 100,
@@ -81,26 +89,25 @@ class _ChooseColorsPageState extends State<ChooseColorsPage> {
               ),
             ),
             SizedBox(height: 30),
-            if (_showColorPicker)
-              MaterialColorPicker(
-                selectedColor: _selectedColor,
-                onColorChange: (color) {
-                  setState(() {
-                    _selectedColor = color;
-                    _updateHexString();
-                    _saveSelectedColor(color);
-                  });
-                },
-                circleSize: 65.0,
-                spacing: 25,
-              ),
+            MaterialColorPicker(
+              selectedColor: _selectedColor,
+              onColorChange: (color) {
+                setState(() {
+                  _selectedColor = color;
+                  _updateHexString();
+                  _saveSelectedColor(color);
+                });
+              },
+              circleSize: 65.0,
+              spacing: 25,
+            ),
             SizedBox(height: 30),
             RichText(
               text: TextSpan(
                 style: TextStyle(
                   fontSize: 20,
                   fontFamily: 'SpaceGroteskRegular',
-                  color: Colors.black, // spécifiez la couleur si nécessaire
+                  color: Colors.black,
                 ),
                 children: <TextSpan>[
                   TextSpan(

@@ -34,4 +34,4 @@ flutter:
       fonts:
         - asset: fonts/SpaceGrotesk-Regular.ttf
   assets:
-    - assets/background.jpg
+    - assets/logo.png
