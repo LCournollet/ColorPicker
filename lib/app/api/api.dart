@@ -1,22 +1,22 @@
 import 'package:unsplash_client/unsplash_client.dart';
 
 Future<Photo> fetchSinglePhoto() async {
-  // Load app credentials from environment variables or file.
+  // Loading des credentials (pas implémenté car buggé)
   var appCredentials = loadAppCredentialsFromEnv();
 
   if (appCredentials == null) {
     throw 'Please provide app credentials.';
   }
 
-  // Create a client.
+  // charge du client (utilisation d'une librairie pour simplifier l'utilisation).
   final client = UnsplashClient(
     settings: ClientSettings(credentials: appCredentials),
   );
 
-  // Fetch a single random photo.
+  // Exemple de requète pour une image.
   final photo = await client.photos.random(count: 1).goAndGet();
 
-  // Close the client when it is done being used to clean up allocated resources.
+  // Fermeture du client pour éviter la surcharge et les lags.
   client.close();
 
   return photo.first;
@@ -27,7 +27,7 @@ Future<Photo> fetchSinglePhoto() async {
 ///
 /// Returns `null` if the variables do not exist.
 AppCredentials? loadAppCredentialsFromEnv() {
-  // Hardcode the access key and secret key here
+  // Credentials en claire pour le moment (à modifier)
   final accessKey = 'LapDdyGsYqIgC--edS3SQS0wf0kdDDoBAZIMEcjN09Y';
   final secretKey = '2LhFVj9jQrdzWmdMdKouqg_FinL4TUEO8nFOwhWaGxg';
 
