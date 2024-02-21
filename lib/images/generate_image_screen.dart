@@ -1,8 +1,10 @@
+// Page pour générer une image via l'api
+
 import 'package:flutter/material.dart';
 import 'package:pick_color/pick_color.dart';
 import 'package:color_picker/app/api/api.dart';
-import 'package:flutter/services.dart'; // Import the flutter/services.dart package for accessing clipboard functionality
-import 'package:unsplash_client/unsplash_client.dart'; // Import the unsplash_client package
+import 'package:flutter/services.dart'; // Importation du package flutter/services.dart pour accéder à la fonctionnalité du presse-papiers
+import 'package:unsplash_client/unsplash_client.dart'; // Importation du package unsplash_client
 
 class GenerateImageScreen extends StatefulWidget {
   @override
@@ -18,32 +20,32 @@ class _GenerateImageScreenState extends State<GenerateImageScreen> {
   @override
   void initState() {
     super.initState();
-    // Load initial image
+    // Chargement de l'image initiale
     _photoFuture = _fetchSinglePhoto();
-    // Initialize userResponse to null
+    // Initialisation de userResponse à null
     userResponse = null;
   }
 
   Future<Photo> _fetchSinglePhoto() async {
-    // Fetch a single photo
+    // Récupération d'une seule photo
     return await fetchSinglePhoto();
   }
 
   void _generateNewImage() {
-    // Generate a new image
+    // Génération d'une nouvelle image
     setState(() {
       _photoFuture = _fetchSinglePhoto();
-      // Reset userResponse to null when generating a new image
+      // Réinitialisation de userResponse à null lors de la génération d'une nouvelle image
       userResponse = null;
-      _showRectangle = false; // Hide the rectangle when generating a new image
+      _showRectangle = false; // Masquer le rectangle lors de la génération d'une nouvelle image
     });
   }
 
   void _copyToClipboard(String text) {
-    Clipboard.setData(ClipboardData(text: text)); // Copy text to clipboard
+    Clipboard.setData(ClipboardData(text: text)); // Copie du texte dans le presse-papiers
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Hex code copied to clipboard'),
+        content: Text('Code hexadécimal copié dans le presse-papiers'), // Affichage du message de confirmation
       ),
     );
   }
@@ -53,11 +55,11 @@ class _GenerateImageScreenState extends State<GenerateImageScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Generate an image'),
-          centerTitle: true,
-          backgroundColor: Colors.blue,
+          title: Text('Générer une image'), // Titre
+          centerTitle: true, // Centrer le titre dans le header
+          backgroundColor: Colors.blue, // Couleur de fond du header
         ),
-        backgroundColor: Color(0xFFCFF0FF),
+        backgroundColor: Color(0xFFCFF0FF), // Couleur de fond
         body: Column(
           children: [
             Expanded(
@@ -68,17 +70,19 @@ class _GenerateImageScreenState extends State<GenerateImageScreen> {
                     future: _photoFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        // Display a loading indicator while fetching the image
+                        // Affichage d'un indicateur de chargement pendant le chargement de l'image (bugé car la génération de l'image lag)
                         return CircularProgressIndicator(
                           color: Colors.black,
                         );
                       } else if (snapshot.hasError) {
+                        // Erreur de requètes
                         return Center(
-                          child: Text('Error: ${snapshot.error}'),
+                          child: Text('Erreur: ${snapshot.error}'),
                         );
                       } else if (!snapshot.hasData) {
+                        // Erreur de l'api (banque innaccessible souvent)
                         return Center(
-                          child: Text('No photo data available'),
+                          child: Text('Aucune donnée d\'image disponible'),
                         );
                       } else {
                         final photo = snapshot.data!;
@@ -90,14 +94,14 @@ class _GenerateImageScreenState extends State<GenerateImageScreen> {
                             setState(() {
                               userResponse = response;
                               color = response.selectionColor;
-                              _showRectangle = true; // Show the rectangle when a color is selected
+                              _showRectangle = true; // Afficher le rectangle lorsqu'une couleur est sélectionnée
                             });
                           },
                         );
                       }
                     },
                   ),
-                  if (_showRectangle) // Display the rectangle only when a color is selected
+                  if (_showRectangle) // Afficher le rectangle uniquement lorsqu'une couleur est sélectionnée
                     Positioned(
                       bottom: 20,
                       child: Container(
@@ -105,7 +109,7 @@ class _GenerateImageScreenState extends State<GenerateImageScreen> {
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black, width: 1),
                           borderRadius: BorderRadius.circular(5),
-                          color: Colors.grey[200],
+                          color: Colors.grey[200], // Couleur de fond gris du rectangle
                         ),
                         child: InkWell(
                           onTap: () {
@@ -119,7 +123,7 @@ class _GenerateImageScreenState extends State<GenerateImageScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Selected Color:",
+                                    "Couleur sélectionnée:", // Texte indiquant la couleur sélectionnée
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
@@ -143,7 +147,7 @@ class _GenerateImageScreenState extends State<GenerateImageScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Hex Code: ${userResponse?.hexCode ?? "-"}",
+                                    "Code Hex: ${userResponse?.hexCode ?? "-"}", // Code Hexadécimal
                                     style: TextStyle(
                                       color: userResponse != null ? Colors.black : Colors.grey,
                                       fontWeight: FontWeight.bold,
@@ -161,13 +165,13 @@ class _GenerateImageScreenState extends State<GenerateImageScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20), // Bouton de génération d'une nouvelle image
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FloatingActionButton(
                     onPressed: _generateNewImage,
-                    tooltip: 'Generate New Image',
+                    tooltip: 'Générer une nouvelle image',
                     child: Icon(Icons.refresh),
                   ),
                 ],
